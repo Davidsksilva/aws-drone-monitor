@@ -1,5 +1,6 @@
 import React,{useEffect, useState} from 'react'
 import AWS from 'aws-sdk';
+import {withRouter} from 'react-router-dom';
 import {MdBatteryAlert, MdBattery20, MdBattery30, MdBattery50, MdBattery60, MdBattery80, MdBattery90, MdBatteryFull} from 'react-icons/md';
 import droneImage from '../../assets/icons8-drone.svg';
 
@@ -18,7 +19,7 @@ const dynamoDb = new AWS.DynamoDB();
 const params = {TableName: 'droneNetworkStatus'}
 
 
-const Main = () => {
+const Main = (props) => {
 
   const [data, setData] = useState([]);
 
@@ -82,11 +83,11 @@ const Main = () => {
         {data.map(d => {
 
           return (
-            <Drone key={d.serialNumber['S']}>
+            <Drone key={d.serialNumber['S']} onClick={() => props.history.push(`drone/${d.serialNumber['S']}`)}>
               <img src={droneImage} alt="drone"/>
               {d.serialNumber['S']}
               <DroneMeta>
-                <DroneStance>
+                <DroneStance stance={d.stance['S']}>
                   {d.stance['S']}
                 </DroneStance>
                 {renderBattery(parseInt(d.battery['N']))}
@@ -103,4 +104,4 @@ const Main = () => {
   )
 }
 
-export default Main
+export default withRouter(Main);
