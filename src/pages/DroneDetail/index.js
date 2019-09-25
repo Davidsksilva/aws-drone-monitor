@@ -3,8 +3,10 @@ import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import AWS from 'aws-sdk';
+import { Line } from 'react-chartjs-2';
+import { parseISO, format } from 'date-fns';
 
-import { Container, BackButton, Header } from './styles';
+import { Container, MenuButton, Header, Content } from './styles';
 import awsConfig from '../../config/aws';
 
 AWS.config.update(awsConfig);
@@ -15,6 +17,41 @@ const DroneDetail = props => {
   const [droneSerial, setDroneSerial] = useState('');
   const [data, setData] = useState([]);
 
+  function getRollData() {
+    const rollData = data.map(element => element.roll.N);
+
+    const timeData = data.map(element =>
+      format(parseISO(element.time.S), 'HH:mm:ss')
+    ); // element.time.S,
+
+    const chartData = {
+      labels: timeData,
+      datasets: [
+        {
+          label: 'Roll Angle',
+          data: rollData,
+          fill: false,
+          backgroundColor: '#336f8a',
+          borderColor: '#336f8a',
+          pointBackgroundColor: '#55bae7',
+          pointBorderColor: '#55bae7',
+          pointHoverBackgroundColor: '#55bae7',
+          pointHoverBorderColor: '#55bae7',
+        },
+      ],
+    };
+
+    // console.log(rollData);
+    return chartData;
+  }
+
+  function getRollOption() {
+    return {
+      title: {
+        display: false,
+      },
+    };
+  }
   function fetchData() {
     const options =
       droneSerial !== ''
@@ -24,7 +61,7 @@ const DroneDetail = props => {
             ExpressionAttributeValues: {
               ':droneSerialNumber': { S: droneSerial },
             },
-            Limit: 100,
+            Limit: 50,
           }
         : undefined;
 
@@ -37,6 +74,7 @@ const DroneDetail = props => {
       if (err) {
         console.log(err);
       } else {
+        console.log(resultData.Items);
         setData(resultData.Items);
       }
     });
@@ -57,10 +95,18 @@ const DroneDetail = props => {
       <h2>Monitoring {droneSerial}</h2>
 
       <Header>
-        <BackButton onClick={() => props.history.goBack()}>
+        <MenuButton onClick={() => props.history.goBack()}>
           <MdKeyboardArrowLeft color="#fff" size={25} />
-        </BackButton>
+        </MenuButton>
       </Header>
+      <Content>
+        <Line
+          data={getRollData()}
+          options={getRollOption()}
+          width={600}
+          height={400}
+        />
+      </Content>
     </Container>
   );
 };

@@ -28,7 +28,7 @@ export const Header = styled.div`
   justify-content: center;
 `;
 
-export const BackButton = styled.button`
+export const MenuButton = styled.button`
   background-color: #212121;
   border: 0;
   height: 49px;
@@ -44,4 +44,10 @@ export const BackButton = styled.button`
     background-color: #333;
     border: 2px solid #212121;
   }
+`;
+
+export const Content = styled.div`
+  width: 500px;
+  margin-top: 20px;
+  background-color: #333;
 `;
