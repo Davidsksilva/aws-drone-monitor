@@ -2,9 +2,11 @@ import React,{useEffect, useState} from 'react'
 import AWS from 'aws-sdk';
 import {withRouter} from 'react-router-dom';
 import {MdBatteryAlert, MdBattery20, MdBattery30, MdBattery50, MdBattery60, MdBattery80, MdBattery90, MdBatteryFull} from 'react-icons/md';
+import Loader from 'react-loader-spinner';
+
 import droneImage from '../../assets/icons8-drone.svg';
 
-import {Container, DronesContainer, Drone, DroneMeta, DroneStance} from './styles';
+import {Container, DronesContainer, Drone, DroneMeta, DroneStance, LoaderContainer} from './styles';
 
 const awsConfig = {
   region: "us-east-2",
@@ -70,16 +72,20 @@ const Main = (props) => {
 
   useEffect(() => {
 
-    const updateTimer = setInterval(fetchData, 1000);
+   const updateTimer = setInterval(fetchData, 1000);
 
-    return () => clearInterval(updateTimer);
+   return () => clearInterval(updateTimer);
 
   },[]);
 
   return (
     <Container>
+
       <h1>Drone Network Dashboard</h1>
-      <DronesContainer>
+
+      <h2>Registered Drones Overview</h2>
+
+      { data.length ?<DronesContainer>
         {data.map(d => {
 
           return (
@@ -98,7 +104,7 @@ const Main = (props) => {
         })}
         
         
-      </DronesContainer>
+      </DronesContainer> : <DronesContainer><Loader type="RevolvingDot"color="#989898" height={100} width={100} /></DronesContainer>}
    
     </Container>
   )

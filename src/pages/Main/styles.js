@@ -6,7 +6,7 @@ export const Container = styled.div`
   padding: 40px 80px;
   width: 100%;
   height: 100%;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
 
@@ -14,6 +14,19 @@ export const Container = styled.div`
     font-size: 3em;
     margin-bottom: 20px;
   }
+
+  h2 {
+    color: #949494;
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+`;
+
+export const LoaderContainer = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const DronesContainer = styled.div`

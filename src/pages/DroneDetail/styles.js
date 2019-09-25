@@ -6,7 +6,7 @@ export const Container = styled.div`
   padding: 40px 80px;
   width: 100%;
   height: 100%;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
 
@@ -18,11 +18,11 @@ export const Container = styled.div`
   h2 {
     color: #949494;
     font-size: 2em;
+    margin-bottom: 20px;
   }
 `;
 
 export const Header = styled.div`
-  margin-top: 20px;
   width: 1000px;
   display: flex;
   justify-content: center;
