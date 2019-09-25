@@ -61,13 +61,12 @@ export const DroneMeta = styled.div`
   margin-top: 10px;
   justify-content: space-between;
   align-items: center;
-
 `;
 
 export const DroneStance = styled.div`
-  border: 2px solid ${props => props.stance === 'moving' ? '#71B43A' : '#ffc34c'};
+  border: 2px solid
+    ${props => (props.stance === 'moving' ? '#71B43A' : '#ffc34c')};
   padding: 4px 8px;
   border-radius: 10px;
-  color: ${props => props.stance === 'moving' ? '#71B43A' : '#ffc34c'};
- 
+  color: ${props => (props.stance === 'moving' ? '#71B43A' : '#ffc34c')};
 `;

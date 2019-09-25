@@ -44,5 +44,4 @@ export const BackButton = styled.button`
     background-color: #333;
     border: 2px solid #212121;
   }
-
 `;
