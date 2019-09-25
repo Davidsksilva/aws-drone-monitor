@@ -4,8 +4,6 @@ import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import Main from './pages/Main';
 import DroneDetail from './pages/DroneDetail';
 
-
-
 const Routes = () => {
   return (
     <BrowserRouter>
