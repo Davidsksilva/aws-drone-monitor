@@ -15,14 +15,24 @@ const DroneDetail = props => {
   const [droneSerial, setDroneSerial] = useState('');
   const [data, setData] = useState([]);
 
-  const params = {
-    TableName: 'droneNetworkHistory',
-    FilterExperssion: '#serialNumber = :droneSerialNumber',
-    ExpressionAttributeNames: { '#serialNumber': 'serialNumber' },
-    ExpressionAttributeValues: { ':droneSerialNumber': droneSerial },
-  };
-
   function fetchData() {
+    const options =
+      droneSerial !== ''
+        ? {
+            FilterExpression: '#serialNumber = :droneSerialNumber',
+            ExpressionAttributeNames: { '#serialNumber': 'serialNumber' },
+            ExpressionAttributeValues: {
+              ':droneSerialNumber': { S: droneSerial },
+            },
+            Limit: 100,
+          }
+        : undefined;
+
+    const params = {
+      TableName: 'droneNetworkHistory',
+      ...options,
+    };
+
     dynamoDb.scan(params, (err, resultData) => {
       if (err) {
         console.log(err);
@@ -38,7 +48,7 @@ const DroneDetail = props => {
     const updateTimer = setInterval(fetchData, 1000);
 
     return () => clearInterval(updateTimer);
-  }, [fetchData, props]);
+  }, []);
 
   return (
     <Container>
