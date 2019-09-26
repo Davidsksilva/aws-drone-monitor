@@ -39,6 +39,7 @@ export const MenuButton = styled.button`
   align-items: center;
   transition: background-color 500ms linear;
   border: 2px solid #212121;
+  color: #fff;
 
   &:hover {
     background-color: #333;
@@ -63,6 +64,9 @@ export const InfoContainer = styled.div`
   background-color: #333;
   border-radius: 4px;
   padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 export const ChartRow = styled.div`

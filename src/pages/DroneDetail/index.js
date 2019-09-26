@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import AWS from 'aws-sdk';
 import { Line } from 'react-chartjs-2';
 import { parseISO, format } from 'date-fns';
+import distanceInWordsToNow from 'date-fns/formatDistanceToNow';
+import en from 'date-fns/locale/en-US';
 
 import {
   Container,
@@ -22,9 +24,37 @@ AWS.config.update(awsConfig);
 
 const dynamoDb = new AWS.DynamoDB();
 
+const iotData = new AWS.IotData({
+  endpoint: 'ap60jigczfevx-ats.iot.us-east-2.amazonaws.com',
+});
+
 const DroneDetail = props => {
   const [droneSerial, setDroneSerial] = useState('');
   const [data, setData] = useState([]);
+
+  function handleStopDrone() {
+    const order =
+      data.length && data[data.length - 1].stance.S === 'moving'
+        ? 'stop'
+        : 'move';
+
+    const payloadObj = {
+      target: droneSerial,
+      order,
+    };
+
+    const params = {
+      topic: 'drone_network/controller',
+      payload: JSON.stringify(payloadObj),
+      qos: 0,
+    };
+
+    return iotData.publish(params, err => {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }
 
   function getPositionData() {
     const yData = data.map(element => element.position.L[1].N);
@@ -156,8 +186,9 @@ const DroneDetail = props => {
     dynamoDb.query(params, (err, resultData) => {
       if (err) {
         console.log(err);
-      } else {
-        setData(resultData.Items);
+      } else if (resultData && resultData.Items.length) {
+        const invertedData = resultData.Items;
+        setData(invertedData.reverse());
       }
     });
   }
@@ -170,6 +201,8 @@ const DroneDetail = props => {
     return () => clearInterval(updateTimer);
   }, [props, fetchData]);
 
+  const mostRecentData = data[data.length - 1];
+
   return (
     <Container>
       <h1>Drone Network Dashboard</h1>
@@ -180,9 +213,65 @@ const DroneDetail = props => {
         <MenuButton onClick={() => props.history.goBack()}>
           <MdKeyboardArrowLeft color="#fff" size={25} />
         </MenuButton>
+
+        <MenuButton
+          onClick={() => handleStopDrone()}
+          style={{
+            marginLeft: 10,
+            color:
+              data.length && mostRecentData.stance.S === 'moving'
+                ? 'red'
+                : 'green',
+            fontWeight: 'bold',
+            fontSize: 16,
+            textAlign: 'center',
+          }}
+        >
+          {data.length && mostRecentData.stance.S === 'moving'
+            ? 'Stop Drone'
+            : 'Restart Drone'}
+        </MenuButton>
       </Header>
       <Content>
-        <InfoContainer>Oi</InfoContainer>
+        <InfoContainer>
+          {data.length && (
+            <>
+              <Info>Status: {mostRecentData.stance.S}</Info>
+              <Info>
+                Position:{' '}
+                {`[ ${parseFloat(mostRecentData.position.L[0].N).toFixed(
+                  2
+                )} , ${parseFloat(mostRecentData.position.L[1].N).toFixed(
+                  2
+                )} , ${parseFloat(mostRecentData.position.L[2].N).toFixed(
+                  2
+                )} ]`}
+              </Info>
+              <Info>
+                Velocity:{' '}
+                {`[ ${parseFloat(mostRecentData.velocity.L[0].N).toFixed(
+                  2
+                )} , ${parseFloat(mostRecentData.velocity.L[1].N).toFixed(
+                  2
+                )} , ${parseFloat(mostRecentData.velocity.L[2].N).toFixed(
+                  2
+                )} ]`}
+              </Info>
+              <Info>
+                Roll Angle: {parseFloat(mostRecentData.roll.N).toFixed(2)}
+              </Info>
+              <Info>Battery Level: {mostRecentData.battery.N}%</Info>
+              <Info>
+                Last Update:{' '}
+                {distanceInWordsToNow(parseISO(mostRecentData.time.S), {
+                  includeSeconds: true,
+                  locale: en,
+                })}{' '}
+                ago
+              </Info>
+            </>
+          )}
+        </InfoContainer>
         <ChartRow>
           <ChartContainer>
             <Line data={getRollData()} options={getRollOption()} />
