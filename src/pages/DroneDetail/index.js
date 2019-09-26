@@ -12,6 +12,9 @@ import {
   Header,
   Content,
   ChartContainer,
+  InfoContainer,
+  ChartRow,
+  Info,
 } from './styles';
 import awsConfig from '../../config/aws';
 
@@ -179,13 +182,16 @@ const DroneDetail = props => {
         </MenuButton>
       </Header>
       <Content>
-        <ChartContainer>
-          <Line data={getRollData()} options={getRollOption()} />
-        </ChartContainer>
+        <InfoContainer>Oi</InfoContainer>
+        <ChartRow>
+          <ChartContainer>
+            <Line data={getRollData()} options={getRollOption()} />
+          </ChartContainer>
 
-        <ChartContainer>
-          <Line data={getPositionData()} options={getPositionOption()} />
-        </ChartContainer>
+          <ChartContainer>
+            <Line data={getPositionData()} options={getPositionOption()} />
+          </ChartContainer>
+        </ChartRow>
       </Content>
     </Container>
   );

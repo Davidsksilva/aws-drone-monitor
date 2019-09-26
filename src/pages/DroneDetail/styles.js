@@ -47,14 +47,32 @@ export const MenuButton = styled.button`
 `;
 
 export const Content = styled.div`
-  width: 100%;
+  width: 80%;
   margin-top: 20px;
 
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-between;
 `;
+
+export const InfoContainer = styled.div`
+  flex: 1;
+  height: 50px;
+  border: 2px solid #212121;
+  background-color: #333;
+  border-radius: 4px;
+  padding: 20px;
+`;
+
+export const ChartRow = styled.div`
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export const Info = styled.div``;
 
 export const ChartContainer = styled.div`
   width: 600px;
