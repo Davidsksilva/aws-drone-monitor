@@ -6,7 +6,13 @@ import AWS from 'aws-sdk';
 import { Line } from 'react-chartjs-2';
 import { parseISO, format } from 'date-fns';
 
-import { Container, MenuButton, Header, Content } from './styles';
+import {
+  Container,
+  MenuButton,
+  Header,
+  Content,
+  ChartContainer,
+} from './styles';
 import awsConfig from '../../config/aws';
 
 AWS.config.update(awsConfig);
@@ -16,6 +22,31 @@ const dynamoDb = new AWS.DynamoDB();
 const DroneDetail = props => {
   const [droneSerial, setDroneSerial] = useState('');
   const [data, setData] = useState([]);
+
+  function getPositionData() {
+    const yData = data.map(element => element.position.L[1].N);
+    const xData = data.map(element =>
+      parseFloat(element.position.L[0].N).toFixed(2)
+    );
+
+    const chartData = {
+      labels: xData,
+      datasets: [
+        {
+          label: 'XY Position',
+          data: yData,
+          fill: false,
+          backgroundColor: '#8a336f',
+          borderColor: '#8a336f',
+          pointBackgroundColor: '#E755BA',
+          pointBorderColor: '#E755BA',
+          pointHoverBackgroundColor: '#E755BA',
+          pointHoverBorderColor: '#E755BA',
+        },
+      ],
+    };
+    return chartData;
+  }
 
   function getRollData() {
     const rollData = data.map(element => element.roll.N);
@@ -47,21 +78,70 @@ const DroneDetail = props => {
 
   function getRollOption() {
     return {
+      responsive: true,
+      maintainAspectRatio: false,
       title: {
         display: false,
       },
+      scales: {
+        yAxes: [
+          {
+            scaleLabel: {
+              display: true,
+              labelString: 'Roll angle (\u00b0)',
+            },
+          },
+        ],
+        xAxes: [
+          {
+            scaleLabel: {
+              display: true,
+              labelString: 'Time (HH:MM:SS)',
+            },
+          },
+        ],
+      },
     };
   }
+
+  function getPositionOption() {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      title: {
+        display: false,
+      },
+      scales: {
+        yAxes: [
+          {
+            scaleLabel: {
+              display: true,
+              labelString: 'Y Pos',
+            },
+          },
+        ],
+        xAxes: [
+          {
+            scaleLabel: {
+              display: true,
+              labelString: 'X Pos',
+            },
+          },
+        ],
+      },
+    };
+  }
+
   function fetchData() {
     const options =
       droneSerial !== ''
         ? {
-            FilterExpression: '#serialNumber = :droneSerialNumber',
-            ExpressionAttributeNames: { '#serialNumber': 'serialNumber' },
+            KeyConditionExpression: 'serialNumber = :droneSerialNumber',
             ExpressionAttributeValues: {
               ':droneSerialNumber': { S: droneSerial },
             },
-            Limit: 50,
+            Limit: 30,
+            ScanIndexForward: false,
           }
         : undefined;
 
@@ -70,11 +150,10 @@ const DroneDetail = props => {
       ...options,
     };
 
-    dynamoDb.scan(params, (err, resultData) => {
+    dynamoDb.query(params, (err, resultData) => {
       if (err) {
         console.log(err);
       } else {
-        console.log(resultData.Items);
         setData(resultData.Items);
       }
     });
@@ -86,7 +165,7 @@ const DroneDetail = props => {
     const updateTimer = setInterval(fetchData, 1000);
 
     return () => clearInterval(updateTimer);
-  }, []);
+  }, [props, fetchData]);
 
   return (
     <Container>
@@ -100,12 +179,13 @@ const DroneDetail = props => {
         </MenuButton>
       </Header>
       <Content>
-        <Line
-          data={getRollData()}
-          options={getRollOption()}
-          width={600}
-          height={400}
-        />
+        <ChartContainer>
+          <Line data={getRollData()} options={getRollOption()} />
+        </ChartContainer>
+
+        <ChartContainer>
+          <Line data={getPositionData()} options={getPositionOption()} />
+        </ChartContainer>
       </Content>
     </Container>
   );

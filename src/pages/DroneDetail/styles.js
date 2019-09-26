@@ -47,7 +47,20 @@ export const MenuButton = styled.button`
 `;
 
 export const Content = styled.div`
-  width: 500px;
+  width: 100%;
   margin-top: 20px;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+`;
+
+export const ChartContainer = styled.div`
+  width: 600px;
+  height: 400px;
   background-color: #333;
+  border-radius: 4px;
+  padding: 20px;
+  border: 2px solid #212121;
 `;
