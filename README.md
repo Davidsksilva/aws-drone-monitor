@@ -12,6 +12,10 @@
 
 ## Getting Started
 
+## Acknowledgements
+
+* Drone svg icon downloaded  from [icons8](https://icons8.com/).
+
 ## License
 
 This project uses the following license: [MIT](https://github.com/Davidsksilva/drone-network-dashboard/blob/master/LICENSE.md).
