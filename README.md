@@ -4,7 +4,7 @@
 
 # AWS Drone Monitor
 
-> A proof of concept drone monitoring system using AWS
+> A proof of concept drone monitoring system using AWS.
 
 ## Prerequisites
 
