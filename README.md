@@ -6,6 +6,9 @@
 
 > A proof of concept drone monitoring system using AWS.
 
+This project tires to simulate and monitorate a simple drone network using the cloud platform AWS. Some IoT devices are simulated, sending predetermined sensor data (velocity, position, accelerometer) collected from a dataset. The full system diagram can be seen below:
+ <img src=".github/diagram.png" />
+
 ## Prerequisites
 
 * You have at least `node 10.X` installed.
