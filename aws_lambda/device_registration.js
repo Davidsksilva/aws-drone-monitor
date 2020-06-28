@@ -1,11 +1,8 @@
 console.log('Loading function');
 var AWS = require('aws-sdk');
 
-const awsConfig = {
-  region: "us-east-2",
-  secretAccessKey: "vitn+sxDrtd8lwLbdkaJ+OlnCB6iHllXurZeeV8G",
-  accessKeyId: "AKIAZU7WRYKFDOVL746C"
-};
+// config includes region, secretAccessKey and accessKeyId
+const awsConfig = require('./awsConfig.json');
 
 AWS.config.update(awsConfig);
 
