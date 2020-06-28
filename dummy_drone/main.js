@@ -1,14 +1,14 @@
 const awsIot = require("aws-iot-device-sdk");
-const crypto = require("crypto");
 const fs = require("fs");
 
+const deviceConfig = require('./deviceConfig.json');
+
 const device = awsIot.device({
-  keyPath: "./auth/drone-sim-0.private.key",
-  certPath: "./auth/drone-sim-0.cert.pem",
-  caPath: "./auth/root-CA.crt",
-  // clientId: "sdk-nodejs-53c03dd9-b543-40ca-879e-a4eb0ddbd3e0",
-  clientId: "sdk-nodejs-DR-01",
-  host: "ap60jigczfevx-ats.iot.us-east-2.amazonaws.com"
+  keyPath: deviceConfig.keyPath,
+  certPath: deviceConfig.certPath,
+  caPath: deviceConfig.caPath,
+  clientId: deviceConfig.clientId,
+  host: deviceConfig.host,
 });
 
 // IoT Fake Data
@@ -51,7 +51,6 @@ function sendMonitoringData() {
     serialNumber,
     velocity: velocity[currentTime],
     position: position[currentTime],
-    //attitude: attitude[currentTime],
     accelerometer: accelerometer[currentTime],
     battery,
     stance,
