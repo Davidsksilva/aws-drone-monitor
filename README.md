@@ -19,6 +19,8 @@ In short, a drone is simulated through a AWS IoT device, which publishes message
 
 ## Getting Started
 
+Given the need to confiture the aws tools, a full explanation of how the code works or how to implement the system itself won't be presentend. But I will be more than happy to answer any questions, just let me known through e-mail.
+
 The source code is separeted in three folders/parts:
 
 * **aws_lambda:** source code for the AWS lambda functions, written in node. Two lambda functions were used, `data_controller.js` to update the drone status (also keeping a history) by inserting data in a DynamoDB table, and `device_registration.js` which registrates the drone itself in a table.
