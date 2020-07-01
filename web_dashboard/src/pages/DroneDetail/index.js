@@ -8,6 +8,8 @@ import { parseISO, format } from 'date-fns';
 import distanceInWordsToNow from 'date-fns/formatDistanceToNow';
 import en from 'date-fns/locale/en-US';
 
+import awsConfig, {iotDataEndpoint} from '../../config/aws';
+
 import {
   Container,
   MenuButton,
@@ -18,14 +20,14 @@ import {
   ChartRow,
   Info,
 } from './styles';
-import awsConfig from '../../config/aws';
+
 
 AWS.config.update(awsConfig);
 
 const dynamoDb = new AWS.DynamoDB();
 
 const iotData = new AWS.IotData({
-  endpoint: 'ap60jigczfevx-ats.iot.us-east-2.amazonaws.com',
+  endpoint: iotDataEndpoint
 });
 
 const DroneDetail = props => {
