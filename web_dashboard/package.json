@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "aws-sdk": "^2.535.0",
+    "aws-sdk": "^2.814.0",
     "chart.js": "^2.8.0",
     "date-fns": "^2.3.0",
     "prop-types": "^15.7.2",
